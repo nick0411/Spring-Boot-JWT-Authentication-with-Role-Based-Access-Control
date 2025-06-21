@@ -43,7 +43,19 @@ public class JwtService {
                 .getSubject();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails){
-        return extractUsername(token).equals(userDetails.getUsername());
+    public boolean validateToken(String token, UserDetails userDetails) {
+        try {
+            String username = extractUsername(token);
+            Date expiration = Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration();
+            boolean isExpired = expiration.before(new Date());
+            return (username.equals(userDetails.getUsername()) && !isExpired);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
