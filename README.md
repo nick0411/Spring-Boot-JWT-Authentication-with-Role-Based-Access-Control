@@ -55,7 +55,7 @@ A secure REST API built with **Spring Boot**, implementing **JWT (JSON Web Token
    ```bash
    git clone https://github.com/nick0411/Spring-Boot-JWT-Authentication-with-Role-Based-Access-Control.git
    
-   cd Spring-Boot-JWT-Authentication-with-Role-Based-Access-Contro
+   cd Spring-Boot-JWT-Authentication-with-Role-Based-Access-Control
    ```
 
 2. (Optional) Configure JWT secret in 'application.properties'
