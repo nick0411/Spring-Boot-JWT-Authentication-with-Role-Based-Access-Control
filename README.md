@@ -58,7 +58,7 @@ A secure REST API built with **Spring Boot**, implementing **JWT (JSON Web Token
    cd Spring-Boot-JWT-Authentication-with-Role-Based-Access-Contro
    ```
 
-2. <Optional> Configure JWT secret in `application.properties
+2. <Optional> Configure JWT secret in 'application.properties'
 
    ```properties
    jwt.secret=<your_secret_key_with_at_least_32_characters>
