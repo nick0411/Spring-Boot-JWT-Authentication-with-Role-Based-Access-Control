@@ -20,10 +20,11 @@ A secure REST API built with **Spring Boot**, implementing **JWT (JSON Web Token
 
 ### Public
 
-| Method | Endpoint             | Description              |
-| ------ | -------------------- | ------------------------ |
-| POST   | `/api/auth/register` | Register a new user      |
-| POST   | `/api/auth/login`    | Authenticate and get JWT |
+| Method | Endpoint                   | Description              |
+| ------ |----------------------------|--------------------------|
+| POST   | `/api/auth/register-user`  | Register a new user      |
+| POST   | `/api/auth/register-admin` | Register a new admin     |
+| POST   | `/api/auth/login`          | Authenticate and get JWT |
 
 ### Protected – Requires JWT
 
@@ -37,10 +38,12 @@ A secure REST API built with **Spring Boot**, implementing **JWT (JSON Web Token
 ## 🛠️ Tech Stack
 
 * Java 21
-* Spring Boot 3.x
+* Spring Boot 3.5.3
+* Spring Web
+* Spring Data JPA
 * Spring Security
-* JWT (jjwt or java-jwt)
-* H2 / PostgreSQL / MySQL
+* JWT (jjwt)
+* H2
 * Maven
 
 ---
@@ -55,7 +58,11 @@ A secure REST API built with **Spring Boot**, implementing **JWT (JSON Web Token
    cd Spring-Boot-JWT-Authentication-with-Role-Based-Access-Contro
    ```
 
-2. Configure database and JWT secret in `application.properties` or `application.yml`.
+2. <Optional> Configure JWT secret in `application.properties
+
+   ```properties
+   jwt.secret=<your_secret_key_with_at_least_32_characters>
+   ```
 
 3. Run the application:
 
@@ -72,7 +79,7 @@ A secure REST API built with **Spring Boot**, implementing **JWT (JSON Web Token
 ### Register
 
 ```bash
-curl -X POST http://localhost:8080/api/auth/register \
+curl -X POST http://localhost:8080/api/auth/register-user \
   -H "Content-Type: application/json" \
   -d '{"username": "john", "email": "john@example.com", "password": "password"}'
 ```
@@ -101,11 +108,12 @@ src
     ├── java
     │   └── com.example.auth
     │       ├── controller
-    │       ├── config
-    │       ├── security
+    │       ├── dto
     │       ├── model
     │       ├── repository
-    │       └── service
+    │       ├── security
+    │       ├── service
+    │       └── AuthApplication.java
     └── resources
         └── application.properties
 ```
@@ -119,7 +127,7 @@ src
 | USER  | Access user-level APIs          |
 | ADMIN | Access both user and admin APIs |
 
-Roles are assigned during registration or updated via admin functions.
+Roles are assigned during registration.
 
 ---
 

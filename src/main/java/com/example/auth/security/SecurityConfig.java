@@ -1,6 +1,6 @@
 package com.example.auth.security;
 
-import com.example.auth.repositories.UserRepository;
+import com.example.auth.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
