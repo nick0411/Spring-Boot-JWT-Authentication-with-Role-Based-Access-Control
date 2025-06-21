@@ -1,22 +1,22 @@
 package com.example.auth.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Role {
-
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Enumerated(value = jakarta.persistence.EnumType.STRING)
-    private ERole role;
+    @Enumerated(EnumType.STRING)
+    private ERole name;
 
     public enum ERole {
         ROLE_USER,
         ROLE_ADMIN
+    }
+
+    public ERole getName() {
+        return name;
     }
 }
