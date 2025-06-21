@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+@Service
 public class AuthService {
 
     @Autowired private UserRepository userRepository;
@@ -22,7 +24,7 @@ public class AuthService {
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private JwtService jwtService;
 
-    public void register(RegisterRequest request){
+    public void register(RegisterRequest request, Role.ERole roleType){
         if (userRepository.existsByUsername(request.username())){
             throw new RuntimeException("Username is already taken");
         }
@@ -32,7 +34,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setEmail(request.email());
 
-        Role role = roleRepository.findByRole(Role.ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findByRole(roleType).orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.setRoles(Set.of(role));
 
@@ -50,9 +52,9 @@ public class AuthService {
                 user.getUsername(),
                 user.getPassword(),
                 user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getName().name())).toList()
+                        .map(role -> new SimpleGrantedAuthority(role.getRole().name())).toList()
         ));
 
-        return new JwtResponse(token, user.getUsername(), user.getRoles().stream().map(role -> role.getName().name()).toList());
+        return new JwtResponse(token, user.getUsername(), user.getRoles().stream().map(role -> role.getRole().name()).toList());
     }
 }

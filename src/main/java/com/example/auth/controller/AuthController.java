@@ -3,6 +3,7 @@ package com.example.auth.controller;
 import com.example.auth.dto.JwtResponse;
 import com.example.auth.dto.LoginRequest;
 import com.example.auth.dto.RegisterRequest;
+import com.example.auth.model.Role;
 import com.example.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,16 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        authService.register(request);
+    @PostMapping("/register-user")
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
+        authService.register(request, Role.ERole.ROLE_USER);
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody RegisterRequest request) {
+        authService.register(request, Role.ERole.ROLE_ADMIN);
+        return ResponseEntity.ok("Admin registered successfully");
     }
 
     @PostMapping("/login")

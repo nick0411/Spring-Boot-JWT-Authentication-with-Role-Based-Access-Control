@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -44,10 +45,15 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(userDetailsService());
-        auth.setPasswordEncoder(new BCryptPasswordEncoder());
+        auth.setPasswordEncoder(passwordEncoder());
         return auth;
     }
 
@@ -58,7 +64,7 @@ public class SecurityConfig {
                         user.getUsername(),
                         user.getPassword(),
                         user.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                                .map(role -> new SimpleGrantedAuthority(role.getRole().name()))
                                 .toList()
                 )).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
